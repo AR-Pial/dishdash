@@ -10,7 +10,7 @@
         "@vitejs/plugin-vue": "^4.5.0",
         "autoprefixer": "^10.4.20",
         "axios": "^1.7.9",
-        "bootstrap": "^5.2.3",
+        "bootstrap": "^5.3.3",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^1.0",
         "postcss": "^8.4.47",
@@ -20,6 +20,6 @@
     },
     "dependencies": {
         "vue-router": "^4.5.0",
-        "vuex": "^4.1.0"
+        "vuex": "^4.0.2"
     }
 }
