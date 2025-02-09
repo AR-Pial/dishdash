@@ -5,6 +5,8 @@ use App\Models\Table;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TableResource;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+
 
 
 class TableController extends Controller
@@ -42,7 +44,7 @@ class TableController extends Controller
                 'data' => new TableResource($table),
             ], 200);
 
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             // Handle validation errors (if any)
             return response()->json([
                 'message' => 'Validation errors occurred',
@@ -73,7 +75,6 @@ class TableController extends Controller
         }
     }
     
-
     public function update(Request $request, $id)
     {
         // Find the table by ID. If not found, return a 404 error.
@@ -87,7 +88,7 @@ class TableController extends Controller
 
         // Validate incoming request data
         $validatedData = $request->validate([
-            'table_number' => 'required|max:255', // Removed 'unique'
+            'table_number' => 'required|unique:tables,table_number,' . $table->id . '|max:255', // Removed 'unique''|max:255',
             'floor_number' => 'nullable|string|max:255',
             'total_seat' => 'required|integer',
             'hourly_price' => 'required|numeric',
