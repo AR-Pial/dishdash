@@ -12,4 +12,8 @@ class Category extends Model
     {
         return $this->hasMany(SubCategory::class);
     }
+    public function foodMenus()
+    {
+        return $this->hasMany(FoodMenu::class);
+    }
 }

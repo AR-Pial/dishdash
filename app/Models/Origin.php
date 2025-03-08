@@ -8,4 +8,9 @@ class Origin extends Model
 {
     //
     protected $fillable = ['name', 'description'];
+
+    public function foodMenus()
+    {
+        return $this->hasMany(FoodMenu::class);
+    }
 }

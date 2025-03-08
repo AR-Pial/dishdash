@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -26,7 +27,10 @@ class UnitSeeder extends Seeder
         foreach ($units as $unit) {
             DB::table('units')->updateOrInsert(
                 ['name' => $unit],
-                ['description' => '']
+                [
+                    'description' => '',
+                    'created_at' => Carbon::now(), 
+                ]
             );
         }
     }

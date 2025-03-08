@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 use Illuminate\Support\Facades\DB;
-
+use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -24,7 +24,10 @@ class OriginSeeder extends Seeder
         foreach ($origins as $origin) {
             DB::table('origins')->updateOrInsert(
                 ['name' => $origin],
-                ['description' => '']
+                [
+                    'description' => '',
+                    'created_at' => Carbon::now(), 
+                ]
             );
         }
     }
