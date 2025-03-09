@@ -80,20 +80,35 @@ class UnitController extends Controller
             ], 404);
         }
 
-        // Validate incoming request data
-        $validatedData = $request->validate([
-            'name' => 'required|unique:units,name,' . $unit->id . '|max:255',
-            'description' => 'nullable|string',
-        ]);
+        try{
+            // Validate incoming request data
+            $validatedData = $request->validate([
+                'name' => 'required|unique:units,name,' . $unit->id . '|max:255',
+                'description' => 'nullable|string',
+            ]);
 
-        // Update the unit record
-        $unit->update($validatedData);
+            // Update the unit record
+            $unit->update($validatedData);
 
-        // Return the updated unit data
-        return response()->json([
-            'data' => new UnitResource($unit),
-        ], 200);
+            // Return the updated unit data
+            return response()->json([
+                'data' => new UnitResource($unit),
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Handle validation errors and return them with a 422 Unprocessable Entity status
+            return response()->json([
+                'message' => 'Validation errors occurred',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            // Handle general errors (e.g., database issues, unknown errors)
+            return response()->json([
+                'message' => 'An unexpected error occurred',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
+    
     public function destroy($id)
     {
         // Find the unit by ID. If not found, return a 404 error.

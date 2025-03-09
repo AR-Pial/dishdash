@@ -82,21 +82,34 @@ class SubCategoryController extends Controller
                 'message' => 'SubCategory not found'
             ], 404);
         }
+        try{
+            // Validate incoming request data
+            $validatedData = $request->validate([
+                'name' => 'required|unique:sub_categories,name,' . $sub_category->id . '|max:255',
+                'category_id' => 'nullable|exists:categories,id',
+                'description' => 'nullable|string',
+            ]);
 
-        // Validate incoming request data
-        $validatedData = $request->validate([
-            'name' => 'required|unique:sub_categories,name,' . $sub_category->id . '|max:255',
-            'category_id' => 'nullable|exists:categories,id',
-            'description' => 'nullable|string',
-        ]);
+            // Update the sub_category record
+            $sub_category->update($validatedData);
 
-        // Update the sub_category record
-        $sub_category->update($validatedData);
-
-        // Return the updated sub_category data
-        return response()->json([
-            'data' => new SubCategoryResource($sub_category),
-        ], 200);
+            // Return the updated sub_category data
+            return response()->json([
+                'data' => new SubCategoryResource($sub_category),
+            ], 200); 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+                // Handle validation errors and return them with a 422 Unprocessable Entity status
+                return response()->json([
+                    'message' => 'Validation errors occurred',
+                    'errors' => $e->errors(),
+                ], 422);
+            } catch (\Exception $e) {
+                // Handle general errors (e.g., database issues, unknown errors)
+                return response()->json([
+                    'message' => 'An unexpected error occurred',
+                    'error' => $e->getMessage(),
+                ], 500);
+            }
     }
     public function destroy($id)
     {
